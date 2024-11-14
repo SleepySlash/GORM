@@ -13,3 +13,7 @@ func NewPerson(name, number string, age int) Person {
 		Number: number,
 	}
 }
+
+func (Person) TableName() string {
+	return "accounts"
+}
