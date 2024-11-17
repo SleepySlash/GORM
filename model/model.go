@@ -1,8 +1,6 @@
 package model
 
 import (
-	"errors"
-
 	"gorm.io/gorm"
 )
 
@@ -33,26 +31,30 @@ func (p *accountDB) Save(person Person) error {
 
 func (p *accountDB) FindName(name string) (Person, error) {
 	var person Person
-	res := p.DB.Find(&person, name)
-	if res != nil {
-		return person, nil
+	res := p.DB.Where("name = ?", name).First(&person)
+	if res.Error != nil {
+		return person, res.Error
 	}
-	return person, errors.New("name is not found")
+	return person, nil
 }
 
 func (p *accountDB) FindAll() ([]Person, error) {
 	var person []Person
-	err := p.DB.Find(&person)
-	if err != nil {
-		return nil, err.Error
+	res := p.DB.Find(&person)
+	if res.Error != nil {
+		return nil, res.Error
 	}
 	return person, nil
 }
 
 func (p *accountDB) Delete(name string) (Person, error) {
 	var person Person
-	res := p.DB.Where("name = ?", name).Delete(&person)
-	if res != nil {
+	res := p.DB.Where("name = ?", name).First(&person)
+	if res.Error != nil {
+		return person, res.Error
+	}
+	res = p.DB.Where("name = ?", name).Delete(person)
+	if res.Error != nil {
 		return person, res.Error
 	}
 	return person, nil
