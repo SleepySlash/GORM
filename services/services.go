@@ -10,18 +10,18 @@ type Service interface {
 }
 
 type service struct {
-	Account model.Account
+	account model.Account
 }
 
 func NewService(gorm model.Account) Service {
 	return &service{
-		Account: gorm,
+		account: gorm,
 	}
 }
 
 func (s *service) AddNewAccount(name, number string, age int) error {
 	person := model.NewPerson(name, number, age)
-	err := s.Account.Save(person)
+	err := s.account.Save(person)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (s *service) AddNewAccount(name, number string, age int) error {
 }
 
 func (s *service) FindAllAccounts() ([]model.Person, error) {
-	person, err := s.Account.FindAll()
+	person, err := s.account.FindAll()
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (s *service) FindAllAccounts() ([]model.Person, error) {
 }
 
 func (s *service) FindAccount(name string) (model.Person, error) {
-	person, err := s.Account.FindName(name)
+	person, err := s.account.FindName(name)
 	if err != nil {
 		return person, err
 	}
@@ -46,7 +46,7 @@ func (s *service) FindAccount(name string) (model.Person, error) {
 
 func (s *service) DeleteAccount(name string) (model.Person, error) {
 	var person model.Person
-	person, err := s.Account.Delete(name)
+	person, err := s.account.Delete(name)
 	if err != nil {
 		return person, err
 	}
