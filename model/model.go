@@ -12,17 +12,17 @@ type Account interface {
 }
 
 type accountDB struct {
-	DB *gorm.DB
+	db *gorm.DB
 }
 
 func CreateConntection(db *gorm.DB) Account {
 	return &accountDB{
-		DB: db,
+		db: db,
 	}
 }
 
 func (p *accountDB) Save(person Person) error {
-	result := p.DB.Create(&person)
+	result := p.db.Create(&person)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -31,7 +31,7 @@ func (p *accountDB) Save(person Person) error {
 
 func (p *accountDB) FindName(name string) (Person, error) {
 	var person Person
-	res := p.DB.Where("name = ?", name).First(&person)
+	res := p.db.Where("name = ?", name).First(&person)
 	if res.Error != nil {
 		return person, res.Error
 	}
@@ -40,7 +40,7 @@ func (p *accountDB) FindName(name string) (Person, error) {
 
 func (p *accountDB) FindAll() ([]Person, error) {
 	var person []Person
-	res := p.DB.Find(&person)
+	res := p.db.Find(&person)
 	if res.Error != nil {
 		return nil, res.Error
 	}
@@ -49,11 +49,11 @@ func (p *accountDB) FindAll() ([]Person, error) {
 
 func (p *accountDB) Delete(name string) (Person, error) {
 	var person Person
-	res := p.DB.Where("name = ?", name).First(&person)
+	res := p.db.Where("name = ?", name).First(&person)
 	if res.Error != nil {
 		return person, res.Error
 	}
-	res = p.DB.Where("name = ?", name).Delete(person)
+	res = p.db.Where("name = ?", name).Delete(person)
 	if res.Error != nil {
 		return person, res.Error
 	}
